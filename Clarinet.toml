@@ -1,0 +1,52 @@
+[project]
+name = "stackslend"
+description = "P2P Lending Platform on Stacks using Clarity 4"
+authors = []
+telemetry = false
+cache_dir = "./.cache"
+requirements = []
+boot_contracts = []
+
+[contracts.trust-token]
+path = "contracts/trust-token.clar"
+clarity_version = 3
+epoch = 3.0
+
+[contracts.proposal-factory]
+path = "contracts/proposal-factory.clar"
+clarity_version = 3
+epoch = 3.0
+
+[contracts.contract-fee-proposal]
+path = "contracts/contract-fee-proposal.clar"
+clarity_version = 3
+epoch = 3.0
+
+[contracts.member-proposal]
+path = "contracts/member-proposal.clar"
+clarity_version = 3
+epoch = 3.0
+
+[contracts.proposal-management]
+path = "contracts/proposal-management.clar"
+clarity_version = 3
+epoch = 3.0
+
+[contracts.lending-request]
+path = "contracts/lending-request.clar"
+clarity_version = 3
+epoch = 3.0
+
+[contracts.request-factory]
+path = "contracts/request-factory.clar"
+clarity_version = 3
+epoch = 3.0
+
+[contracts.request-management]
+path = "contracts/request-management.clar"
+clarity_version = 3
+epoch = 3.0
+
+[repl]
+costs_version = 3
+parser_version = 2
