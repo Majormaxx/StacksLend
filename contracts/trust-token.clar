@@ -315,3 +315,12 @@
         (ok true)
     )
 )
+
+;; Analytics read-only functions
+(define-read-only (get-holder-count)
+    (var-get trustee-count)
+)
+
+(define-read-only (get-circulating-supply)
+    (- TOKEN_SUPPLY (var-get total-burned))
+)
