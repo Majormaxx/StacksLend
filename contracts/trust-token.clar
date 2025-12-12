@@ -31,6 +31,7 @@
 (define-data-var contract-stx-balance uint u0)
 (define-data-var trustee-count uint u0)
 (define-data-var proposal-management-contract (optional principal) none)
+(define-data-var total-burned uint u0)
 
 ;; Data Maps
 (define-map token-balances principal uint)
