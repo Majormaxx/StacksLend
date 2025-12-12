@@ -1,0 +1,88 @@
+# StacksLend Development Rules
+
+## Git Commit Style
+
+**Format**: Single sentence, past active tense, no bullet points
+
+### ✅ Good Examples
+```
+implemented trust token ICO participation logic
+added proposal voting mechanism with majority rules
+migrated frontend authentication to Stacks connect
+fixed token transfer validation in lending requests
+updated contract fee calculation to use microSTX
+refactored proposal management to reduce gas costs
+```
+
+### ❌ Bad Examples
+```
+feat: Added new feature with multiple changes  (no feat: prefix, no capital, no multiple)
+- Fixed bug in contract (no bullet points)
+Implementing new logic (not past tense)
+add feature (capital first letter required)
+```
+
+## Files to Push
+
+### Always Push
+- `README.md` - Project documentation
+- All `.clar` files - Smart contracts
+- `Clarinet.toml` - Project configuration
+- `package.json` - Dependencies
+- Test files in `tests/` directory
+- Frontend source code in `frontend/src/`
+
+### Never Push
+- `*.md` files except `README.md`
+  - No `FEATURES.md`, `BRANCHES.md`, `WALKTHROUGH.md`, etc.
+  - Keep documentation in artifacts directory only
+- `.env` files or secrets
+- `node_modules/`
+- Build artifacts
+- `.cache/` or temp files
+
+## Professional Standards
+
+1. **Clean Repository**
+   - Only production-relevant files
+   - No development notes or internal docs in repo
+   - Use `.dev/` folder for local development notes (gitignored)
+
+2. **Commit Hygiene**
+   - One logical change per commit
+   - Descriptive but concise messages
+   - Always follow commit style
+
+3. **Branch Strategy**
+   - `main` - production only
+   - `develop` - integration branch
+   - `feature/*` - feature development
+   - Always PR to develop first
+
+## Development Artifacts Location
+
+Store development documents in: `/home/ubuntu/.gemini/antigravity/brain/<conversation-id>/`
+
+These should never be committed to the repository:
+- `task.md` - Task tracking
+- `implementation_plan.md` - Planning docs
+- `walkthrough.md` - Progress notes
+- `CLARITY4_FEATURES.md` - Internal feature docs
+- `BRANCHES.md` - Branch strategy notes
+
+## Code Quality
+
+1. **Clarity Contracts**
+   - Follow Stacks best practices
+   - Include error codes and comments
+   - Use Clarity 4 features appropriately
+
+2. **Frontend**
+   - Vue.js 2.x conventions
+   - Component-based architecture
+   - Proper state management
+
+3. **Testing**
+   - Unit tests for all contracts
+   - Integration tests for user flows
+   - Test coverage > 80%
