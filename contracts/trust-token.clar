@@ -315,3 +315,17 @@
         (ok true)
     )
 )
+
+;; Batch transfer for gas optimization
+(define-public (batch-transfer (transfers (list 10 {recipient: principal, amount: uint})))
+    (ok (map batch-transfer-helper transfers))
+)
+
+(define-private (batch-transfer-helper (transfer-data {recipient: principal, amount: uint}))
+    (unwrap-panic (transfer 
+        (get amount transfer-data) 
+        tx-sender 
+        (get recipient transfer-data) 
+        none
+    ))
+)
