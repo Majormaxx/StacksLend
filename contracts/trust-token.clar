@@ -162,15 +162,20 @@
         (asserts! (var-get ico-active) ERR_ICO_INACTIVE)
         (asserts! (> amount u0) ERR_INVALID_AMOUNT)
         
-        ;; Transfer STX to contract
+        ;; Reentrancy protection: checks-effects-interactions pattern
+        ;; 1. Checks complete (all assertions above)
+        ;; 2. Effects - update state BEFORE external call
+        (let
+            (
+                (new-balance (+ current-balance allowed-amount))
+            )
+            (var-set contract-stx-balance new-balance)
+            (map-set stx-balances participant 
+                (+ (get-stx-balance participant) allowed-amount))
+        )
+        
+        ;; 3. Interactions - external calls happen last
         (try! (stx-transfer? allowed-amount participant (as-contract tx-sender)))
-        
-        ;; Update participant's STX balance
-        (map-set stx-balances participant 
-            (+ (get-stx-balance participant) allowed-amount))
-        
-        ;; Update contract STX balance
-        (var-set contract-stx-balance (+ current-balance allowed-amount))
         
         ;; Register as trustee if not already
         (if (not (get-trustee-status participant))
