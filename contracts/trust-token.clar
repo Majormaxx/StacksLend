@@ -165,15 +165,20 @@
         (asserts! (<= amount u1000000000000) ERR_INVALID_AMOUNT) ;; Max 1M STX
         (asserts! (not (is-eq participant (as-contract tx-sender))) ERR_UNAUTHORIZED)
         
-        ;; Transfer STX to contract
+        ;; Reentrancy protection: checks-effects-interactions pattern
+        ;; 1. Checks complete (all assertions above)
+        ;; 2. Effects - update state BEFORE external call
+        (let
+            (
+                (new-balance (+ current-balance allowed-amount))
+            )
+            (var-set contract-stx-balance new-balance)
+            (map-set stx-balances participant 
+                (+ (get-stx-balance participant) allowed-amount))
+        )
+        
+        ;; 3. Interactions - external calls happen last
         (try! (stx-transfer? allowed-amount participant (as-contract tx-sender)))
-        
-        ;; Update participant's STX balance
-        (map-set stx-balances participant 
-            (+ (get-stx-balance participant) allowed-amount))
-        
-        ;; Update contract STX balance
-        (var-set contract-stx-balance (+ current-balance allowed-amount))
         
         ;; Register as trustee if not already
         (if (not (get-trustee-status participant))
