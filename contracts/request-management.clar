@@ -53,8 +53,11 @@
             (user-count (get-user-request-count tx-sender))
             (request-idx (var-get total-requests))
         )
+        ;; Input validation
         (asserts! (> amount u0) ERR_INVALID_AMOUNT)
         (asserts! (> payback amount) ERR_INVALID_PAYBACK)
+        (asserts! (<= amount u1000000000000) ERR_INVALID_AMOUNT) ;; Max 1M STX
+        (asserts! (<= payback u2000000000000) ERR_INVALID_AMOUNT) ;; Max 2M STX
         (asserts! (< user-count MAX_USER_REQUESTS) ERR_TOO_MANY_REQUESTS)
         
         ;; Create request (in real implementation, deploy new contract)

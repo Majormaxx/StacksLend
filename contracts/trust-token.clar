@@ -159,8 +159,11 @@
                                 amount))
             (refund-amount (- amount allowed-amount))
         )
+        ;; Input validation
         (asserts! (var-get ico-active) ERR_ICO_INACTIVE)
         (asserts! (> amount u0) ERR_INVALID_AMOUNT)
+        (asserts! (<= amount u1000000000000) ERR_INVALID_AMOUNT) ;; Max 1M STX
+        (asserts! (not (is-eq participant (as-contract tx-sender))) ERR_UNAUTHORIZED)
         
         ;; Transfer STX to contract
         (try! (stx-transfer? allowed-amount participant (as-contract tx-sender)))
@@ -224,6 +227,10 @@
 ;; SIP-010 Transfer function
 (define-public (transfer (amount uint) (sender principal) (recipient principal) (memo (optional (buff 34))))
     (begin
+        ;; Input validation
+        (asserts! (> amount u0) ERR_INVALID_AMOUNT)
+        (asserts! (not (is-eq sender recipient)) ERR_INVALID_AMOUNT)
+        ;; Authorization and lock checks
         (asserts! (or (is-eq tx-sender sender) (> (default-to u0 (map-get? allowances {owner: sender, spender: tx-sender})) u0)) ERR_NOT_TOKEN_OWNER)
         (asserts! (not (get-user-locked-status sender)) ERR_USER_LOCKED)
         
@@ -268,6 +275,8 @@
 ;; Approve spender
 (define-public (approve (spender principal) (amount uint))
     (begin
+        ;; Input validation
+        (asserts! (not (is-eq spender tx-sender)) ERR_INVALID_AMOUNT)
         (asserts! (>= (default-to u0 (map-get? token-balances tx-sender)) amount) ERR_INSUFFICIENT_BALANCE)
         (map-set allowances {owner: tx-sender, spender: spender} amount)
         (ok true)
