@@ -1,0 +1,1 @@
+; Enhanced event logging already implemented via print statements in transfer, burn, etc.
