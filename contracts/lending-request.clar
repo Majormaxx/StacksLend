@@ -36,6 +36,11 @@
     (token principal)
 )
     (begin
+        ;; Input validation
+        (asserts! (> amount u0) ERR_INVALID_AMOUNT)
+        (asserts! (> payback amount) ERR_INVALID_AMOUNT)
+        (asserts! (<= amount u1000000000000) ERR_INVALID_AMOUNT) ;; Max 1M STX
+        ;; Initialize state
         (var-set asker req-asker)
         (var-set verified-asker verified)
         (var-set amount-asked amount)
@@ -73,7 +78,10 @@
 ;; Deposit STX (lend or payback)
 (define-public (deposit (depositor principal))
     (begin
+        ;; Authorization check
         (asserts! (is-eq tx-sender (var-get management-contract)) ERR_UNAUTHORIZED)
+        ;; Input validation
+        (asserts! (not (is-eq depositor (as-contract tx-sender))) ERR_UNAUTHORIZED)
         
         ;; Case 1: Lender deposits (covers the loan)
         (if (not (var-get money-lent))

@@ -72,7 +72,9 @@
 (define-public (create-contract-fee-proposal (proposed-fee uint))
     (begin
         (asserts! (is-member tx-sender) ERR_NOT_MEMBER)
+        ;; Input validation
         (asserts! (> proposed-fee u0) ERR_INVALID_FEE)
+        (asserts! (<= proposed-fee u100000000) ERR_INVALID_FEE) ;; Max 100 STX fee
         
         ;; Store proposal type for tracking
         (map-set proposal-type (as-contract tx-sender) 
@@ -88,8 +90,10 @@
 ;; Create member proposal
 (define-public (create-member-proposal (member-address principal) (adding bool))
     (begin
-        ;; Check caller is trustee (via trust token contract - simplified for now)
+        ;; Input validation
         (asserts! (not (is-eq member-address tx-sender)) ERR_INVALID_ADDRESS)
+        (asserts! (not (is-eq member-address (as-contract tx-sender))) ERR_INVALID_ADDRESS)
+        ;; Check caller is trustee (via trust token contract - simplified for now)
         
         (if adding
             (asserts! (not (is-member member-address)) ERR_MEMBER_EXISTS)
@@ -184,7 +188,9 @@
 (define-public (update-contract-fee (new-fee uint))
     (begin
         ;; In real implementation, verify this is called by executed proposal
+        ;; Input validation
         (asserts! (> new-fee u0) ERR_INVALID_FEE)
+        (asserts! (<= new-fee u100000000) ERR_INVALID_FEE) ;; Max 100 STX
         (var-set contract-fee new-fee)
         (ok true)
     )
