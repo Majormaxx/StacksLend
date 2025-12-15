@@ -447,10 +447,19 @@
 )
 
 (define-private (batch-transfer-helper (transfer-data {recipient: principal, amount: uint}))
-    (unwrap-panic (transfer 
-        (get amount transfer-data) 
-        tx-sender 
-        (get recipient transfer-data) 
+    (unwrap-panic (transfer
+        (get amount transfer-data)
+        tx-sender
+        (get recipient transfer-data)
         none
     ))
+)
+
+;; Analytics read-only functions
+(define-read-only (get-holder-count)
+    (var-get trustee-count)
+)
+
+(define-read-only (get-circulating-supply)
+    (- TOKEN_SUPPLY (var-get total-burned))
 )
