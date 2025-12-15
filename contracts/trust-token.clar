@@ -463,3 +463,14 @@
 (define-read-only (get-circulating-supply)
     (- TOKEN_SUPPLY (var-get total-burned))
 )
+
+;; Token vesting for team allocation
+(define-map vesting-schedules principal {amount: uint, start-block: uint, unlock-block: uint})
+
+(define-public (create-vesting-schedule (beneficiary principal) (amount uint) (unlock-block uint))
+    (begin
+        (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_UNAUTHORIZED)
+        (map-set vesting-schedules beneficiary {amount: amount, start-block: block-height, unlock-block: unlock-block})
+        (ok true)
+    )
+)
